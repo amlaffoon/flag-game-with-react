@@ -1,6 +1,8 @@
 import "./GameWindow.css"
 
-function GameWindow() {
+function GameWindow(props) {
+
+    let { emoji, handler } = props;
 
     return <div className="box">
 
@@ -12,18 +14,18 @@ function GameWindow() {
 
         <div className="card">
             <div className="card-image">
-                <figure className="image" id="emojifig"></figure>
+                <figure className="image" id="emojifig">{emoji}</figure>
             </div>
         </div>
 
 
         <section className="buttons">
             <button className="button is-success is-light is-medium is-responsive" id="ybtn"
-                onclick="handleAnswer(true)">
+                onClick={() => handler(true)}>
                 Yes
             </button>
             <button className="button is-danger is-light is-medium is-responsive" id="nbtn"
-                onclick="handleAnswer(false)">
+                onClick={() => handler(false)}>
                 No
             </button>
         </section>
