@@ -1,5 +1,7 @@
+import "./Instructions.css"
+
 function Instructions() {
-    return <div id="intro" class="box">
+    return <div id="intro" className="box">
         <p>
             Identify whether or not the emoji is a flag. If you guess all of them correctly, you win!
         </p>
