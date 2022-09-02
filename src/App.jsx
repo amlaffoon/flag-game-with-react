@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import Instructions from './components/Instructions'
 import 'bulma/css/bulma.min.css';
@@ -27,18 +27,24 @@ function shuffleArray(array) {
 }
 
 function App() {
-  const [count, setCount] = useState(0)
   const [remainingEmojis, setRemainingEmojis] = useState(getRemainingEmojis());
   const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [seconds, setSeconds] = useState(60);
+  const [isActive, setIsActive] = useState(false);
 
   let currentEmoji = remainingEmojis[0].emoji
 
   function handleAnswer(isFlag) {
-    console.log(isFlag);
-    let currentEmojiIsFlag = currentEmoji.category === "Flags";
+    if (!isActive) {
+      setIsActive(true);
+    }
+
+    let currentEmojiIsFlag = remainingEmojis[0].category === "Flags";
 
 
     if (isFlag === currentEmojiIsFlag) {
+      console.log(isFlag, currentEmojiIsFlag)
+      console.log(currentEmoji)
       setCorrectAnswers([...correctAnswers, currentEmoji]);
 
       let [first, ...remaining] = remainingEmojis;
@@ -46,9 +52,41 @@ function App() {
       setRemainingEmojis(remaining);
 
     } else {
-      // playerLoses("You lose. Try again!")
+      playerLoses();
     }
   }
+
+  function playerLoses() {
+    alert("You lose. Sorry!")
+    setCorrectAnswers([]);
+    setRemainingEmojis(getRemainingEmojis());
+    resetTimer();
+  }
+
+
+  function resetTimer() {
+    setSeconds(60);
+    setIsActive(false);
+  }
+
+  useEffect(() => {
+    let interval = null;
+    if (isActive) {
+      interval = setInterval(() => {
+        setSeconds(seconds => seconds - 1);
+      }, 1000);
+    }
+
+    if (seconds === 0) {
+      playerLoses();
+    }
+
+    if (!isActive) {
+      clearInterval(interval);
+      resetTimer()
+    }
+    return () => clearInterval(interval);
+  }, [isActive, seconds]);
 
 
 
@@ -56,8 +94,8 @@ function App() {
     <div className="App">
       <Instructions></Instructions>
       <GameWindow emoji={currentEmoji} handler={handleAnswer}></GameWindow>
-      <ScoreTimer></ScoreTimer>
-      <Answers></Answers>
+      <ScoreTimer seconds={seconds}></ScoreTimer>
+      <Answers answers={correctAnswers}></Answers>
     </div>
   )
 }

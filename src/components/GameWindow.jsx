@@ -1,8 +1,27 @@
 import "./GameWindow.css"
+import { useEffect } from 'react'
 
 function GameWindow(props) {
 
     let { emoji, handler } = props;
+
+    useEffect(() => {
+        function handleKeyDown(e) {
+            console.log(e.keyCode);
+            if (e.key === "y") {
+                handler(true)
+            } else if (e.key === "n") {
+                handler(false)
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Don't forget to clean up
+        return function cleanup() {
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+    }, [handler]);
 
     return <div className="box">
 

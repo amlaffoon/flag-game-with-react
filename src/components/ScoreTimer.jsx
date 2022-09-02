@@ -1,6 +1,6 @@
-function ScoreTimer() {
+function ScoreTimer(props) {
     return <div className="box">
-        <p id="timer"></p>
+        <p id="timer">{props.seconds}</p>
         <p id="score"></p>
     </div>
 }
